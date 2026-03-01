@@ -2,15 +2,15 @@ clear_data:
 	del *.exe
 
 build_files:
-	gcc -o main main.c tree.c
-	gcc -o tests tests.c tree.c
+	gcc -o main.exe main.c tree.c
+	gcc -o tests.exe tests.c tree.c
 
-run:
-	./main.exe
+main:
+	main.exe
 
 test:
-	./tests.exe
+	tests.exe
 
-main: build_files run clear_data
+run_main: build_files main clear_data
 
-test_all: build_files test clear_data
+run_test: build_files test clear_data
