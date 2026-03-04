@@ -28,9 +28,9 @@ void insert(Node **root, int data) {
     }
 
     if (data < (*root)->data) {
-        insert(&((*root)->left), data);
+        insert(&(*root)->left, data);
     } else {
-        insert(&((*root)->right), data);
+        insert(&(*root)->right, data);
     }
 }
 
