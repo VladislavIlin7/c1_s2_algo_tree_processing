@@ -1,0 +1,10 @@
+3 A apple
+7 B banana
+12 C cat
+18 D dog
+25 E elephant
+31 F fox
+44 G goat
+52 H horse
+63 I iguana
+77 J jaguar

@@ -1,0 +1,4 @@
+12 B moscow
+5 A apple
+7 K linux
+33 D android
