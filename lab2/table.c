@@ -56,7 +56,6 @@ void readTableFromFile(Table *table, char *filename) {
     while (fscanf(file, "%d %c %[^\n]\n", &key_int, &key_char, value) == 3) {
         addElement(table, key_int, key_char, value);
     }
-
     fclose(file);
 }
 
@@ -98,13 +97,12 @@ int binarySearch(Table *table, int key_int, char key_char) {
 
         if (cmp == 0) {
             return mid;
-        } else if (cmp < 0) {
+        } if (cmp < 0) {
             left = mid + 1;
         } else {
             right = mid - 1;
         }
     }
-
     return -1;
 }
 
