@@ -27,21 +27,23 @@ char *readLine(FILE *file) {
     }
 
     while ((ch = fgetc(file)) != '\n' && ch != EOF) {
-        buffer[len++] = ch;
+        buffer[len++] = (char) ch;
         if (len + 1 >= size) {
             size *= 2;
             char *new_line = realloc(buffer, size);
-            if (new_line == NULL) { 
+            if (new_line == NULL) {
                 free(buffer);
                 exit(1);
             }
             buffer = new_line;
         }
-        if (ch == EOF && len == 0) {
-            free(buffer);
-            return NULL;
-        }
     }
+
+    if (ch == EOF && len == 0) {
+        free(buffer);
+        return NULL;
+    }
+
     buffer[len] = '\0';
     return buffer;
 
@@ -73,6 +75,9 @@ void addElement(Table *table, const int key_int, const char key_char, const char
     table->key_int[current_size] = key_int;
     table->key_char[current_size] = key_char;
     table->value[current_size] = malloc(strlen(value) + 1);
+    if (table->value[current_size] == NULL) {
+        exit(1);
+    }
     strcpy(table->value[current_size], value);
 }
 
@@ -86,16 +91,16 @@ int lenInt(int n) {
     return count;
 }
 
-void readTableFromFile(Table *table, char *filename) {
+void readTableFromFile(Table *table, const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
         printf("%s - not found\n", filename);
         return;
     }
 
-    char line[2048];
+    char *line;
 
-    while (fgets(line, sizeof(line), file)) {
+    while ((line = readLine(file)) != NULL) {
         line[strcspn(line, "\n")] = '\0';
 
         char *key_str = strtok(line, " ");
@@ -103,15 +108,18 @@ void readTableFromFile(Table *table, char *filename) {
         char *value = strtok(NULL, "");
 
         if (!key_str || !key_char) {
+            free(line);
             continue;
         }
 
         if (strlen(key_char) != 1 || !isalpha(key_char[0])) {
+            free(line);
             continue;
         }
 
         int key_int = atoi(key_str);
         if (lenInt(key_int) != strlen(key_str)) {
+            free(line);
             continue;
         }
         if (!value) {
@@ -119,12 +127,14 @@ void readTableFromFile(Table *table, char *filename) {
         } else {
             addElement(table, key_int, key_char[0], value);
         }
+
+        free(line);
     }
 
     fclose(file);
 }
 
-void selectionSort(const Table *t) {
+void selectionSort(Table *t) {
     for (int i = 0; i < t->size - 1; i++) {
         int min = i;
 
@@ -177,7 +187,7 @@ void printFindElement(const Table *table, int index) {
         printf("index out of range\n");
         return;
     }
-    printf("Find element: %d", table->key_int[index]);
+    printf("Find element: %d %c | %s\n", table->key_int[index], table->key_char[index], table->value[index]);
 }
 
 void printTable(const Table *table) {
