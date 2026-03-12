@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +16,37 @@ void initTable(Table *table) {
     table->key_char = NULL;
     table->value = NULL;
 }
+char *readLine(FILE *file) {
+    char ch;
+    int size = 32;
+    int len = 0;
+    char *buffer = malloc(size);
+
+    if (buffer == NULL) { 
+        exit(1);
+    }
+
+    while ((ch = fgetc(file)) != '\n' && ch != EOF) {
+        buffer[len++] = ch;
+        if (len + 1 >= size) {
+            size *= 2;
+            char *new_line = realloc(buffer, size);
+            if (new_line == NULL) { 
+                free(buffer);
+                exit(1);
+            }
+            buffer = new_line;
+        }
+        if (ch == EOF && len == 0) {
+            free(buffer);
+            return NULL;
+        }
+    }
+    buffer[len] = '\0';
+    return buffer;
+
+}
+
 
 int key_cmp(int a_int, char a_char, int b_int, char b_char) {
     if (a_int < b_int) return -1;
@@ -27,7 +59,8 @@ int key_cmp(int a_int, char a_char, int b_int, char b_char) {
 }
 
 
-void addElement(Table *table, int key_int, char key_char, char *value) {
+void addElement(Table *table, const int key_int, const char key_char, const char *value) {
+    int current_size = table->size;
     table->size++;
 
     table->key_int = (int *) realloc(table->key_int, sizeof(int) * table->size);
@@ -36,30 +69,62 @@ void addElement(Table *table, int key_int, char key_char, char *value) {
     if (table->key_int == NULL || table->key_char == NULL || table->value == NULL) {
         exit(1);
     }
-    table->key_int[table->size - 1] = key_int;
-    table->key_char[table->size - 1] = key_char;
-    table->value[table->size - 1] = malloc(strlen(value) + 1);
-    strcpy(table->value[table->size - 1], value);
+
+    table->key_int[current_size] = key_int;
+    table->key_char[current_size] = key_char;
+    table->value[current_size] = malloc(strlen(value) + 1);
+    strcpy(table->value[current_size], value);
+}
+
+int lenInt(int n) {
+    int count = 0;
+    if (n == 0) count = 1;
+    while (n != 0) {
+        n /= 10;
+        count++;
+    }
+    return count;
 }
 
 void readTableFromFile(Table *table, char *filename) {
     FILE *file = fopen(filename, "r");
-
     if (!file) {
         printf("%s - not found\n", filename);
         return;
     }
-    int key_int;
-    char key_char;
-    char value[1024];
 
-    while (fscanf(file, "%d %c %[^\n]\n", &key_int, &key_char, value) == 3) {
-        addElement(table, key_int, key_char, value);
+    char line[2048];
+
+    while (fgets(line, sizeof(line), file)) {
+        line[strcspn(line, "\n")] = '\0';
+
+        char *key_str = strtok(line, " ");
+        char *key_char = strtok(NULL, " ");
+        char *value = strtok(NULL, "");
+
+        if (!key_str || !key_char) {
+            continue;
+        }
+
+        if (strlen(key_char) != 1 || !isalpha(key_char[0])) {
+            continue;
+        }
+
+        int key_int = atoi(key_str);
+        if (lenInt(key_int) != strlen(key_str)) {
+            continue;
+        }
+        if (!value) {
+            addElement(table, key_int, key_char[0], "");
+        } else {
+            addElement(table, key_int, key_char[0], value);
+        }
     }
+
     fclose(file);
 }
 
-void selectionSort(Table *t) {
+void selectionSort(const Table *t) {
     for (int i = 0; i < t->size - 1; i++) {
         int min = i;
 
@@ -86,7 +151,7 @@ void selectionSort(Table *t) {
     }
 }
 
-int binarySearch(Table *table, int key_int, char key_char) {
+int binarySearch(const Table *table, int key_int, char key_char) {
     int left = 0;
     int right = table->size - 1;
 
@@ -97,7 +162,8 @@ int binarySearch(Table *table, int key_int, char key_char) {
 
         if (cmp == 0) {
             return mid;
-        } if (cmp < 0) {
+        }
+        if (cmp < 0) {
             left = mid + 1;
         } else {
             right = mid - 1;
@@ -106,7 +172,7 @@ int binarySearch(Table *table, int key_int, char key_char) {
     return -1;
 }
 
-void printFindElement(Table *table, int index) {
+void printFindElement(const Table *table, int index) {
     if (index < 0 || index >= table->size) {
         printf("index out of range\n");
         return;
