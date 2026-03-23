@@ -1,4 +1,5 @@
-#include "func.h"
+#include "parser.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -24,20 +25,20 @@ int main() {
 
         node *root = buildExpressionTree(expr);
         if (root == NULL) {
-            printf("Ошибка: не удалось построить дерево\n");
+            printf("Error: can't build a tree\n");
             continue;
         }
 
-        printf("Исходное выражение: ");
+        printf("Input: ");
         printExpression(root);
-        printf("\n\nИсходное дерево:\n");
+        printf("\n\nOrigin tree:\n");
         printTree(root, 0);
 
         root = transform(root);
 
-        printf("\nПосле преобразования: ");
+        printf("\nResult: ");
         printExpression(root);
-        printf("\n\nДерево после преобразования:\n");
+        printf("\n\nResult tree:\n");
         printTree(root, 0);
 
         freeTree(root);

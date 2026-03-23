@@ -2,9 +2,9 @@ clear_data:
 	del *.exe
 
 build_main:
-	gcc -o main.exe main.c func.c
+	gcc -o main.exe main.c parser.c tree.c stacks.c
 build_tests:
-	gcc -o tests.exe tests.c func.c
+	gcc -o tests.exe tests.c parser.c tree.c stacks.c
 
 main:
 	main.exe
