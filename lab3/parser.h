@@ -11,7 +11,7 @@ int isDigit(char ch);
 int isSpace(char ch);
 int getNextToken(const char *expr, int *pos, char **token);
 
-int buildTopSubtree(stack *nodeStack, stackOperator *opStack);
+int buildTopSubtree(operandStack *nodeStack, stackOperator *opStack);
 node *buildExpressionTree(const char *expr);
 
 #endif

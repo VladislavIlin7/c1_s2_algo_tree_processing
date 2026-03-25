@@ -3,11 +3,11 @@
 
 #include "tree.h"
 
-typedef struct stack {
+typedef struct operandStack {
     int size;
     node **data;
     int top;
-} stack;
+} operandStack;
 
 typedef struct stackOperator {
     int size;
@@ -15,12 +15,12 @@ typedef struct stackOperator {
     int top;
 } stackOperator;
 
-stack *createStack();
-int isEmptyStack(stack *s);
-int isFullStack(stack *s);
-void push(stack *s, node *value);
-node *pop(stack *s);
-void freeStack(stack *s);
+operandStack *createOperandStack();
+int isEmptyOperandStack(operandStack *s);
+int isFullOperandStack(operandStack *s);
+void pushOperandStack(operandStack *s, node *value);
+node *popOperandStack(operandStack *s);
+void freeOperandStack(operandStack *s);
 
 stackOperator *createStackOperator();
 int isEmptyStackOperator(stackOperator *s);

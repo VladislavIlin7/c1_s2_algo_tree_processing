@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-stack *createStack() {
-    stack *s = malloc(sizeof(stack));
+operandStack *createOperandStack() {
+    operandStack *s = malloc(sizeof(operandStack));
     if (s == NULL) {
         return NULL;
     }
@@ -20,22 +20,22 @@ stack *createStack() {
     return s;
 }
 
-int isEmptyStack(stack *s) {
+int isEmptyOperandStack(operandStack *s) {
     if (s->top == -1) {
         return 1;
     }
     return 0;
 }
 
-int isFullStack(stack *s) {
+int isFullOperandStack(operandStack *s) {
     if (s->top == s->size - 1) {
         return 1;
     }
     return 0;
 }
 
-void push(stack *s, node *value) {
-    if (isFullStack(s)) {
+void pushOperandStack(operandStack *s, node *value) {
+    if (isFullOperandStack(s)) {
         s->size *= 2;
         node **tmp = realloc(s->data, s->size * sizeof(node *));
         if (tmp == NULL) {
@@ -48,15 +48,15 @@ void push(stack *s, node *value) {
     s->data[++s->top] = value;
 }
 
-node *pop(stack *s) {
-    if (isEmptyStack(s)) {
+node *popOperandStack(operandStack *s) {
+    if (isEmptyOperandStack(s)) {
         printf("Stack is empty\n");
         return NULL;
     }
     return s->data[s->top--];
 }
 
-void freeStack(stack *s) {
+void freeOperandStack(operandStack *s) {
     if (s == NULL) {
         return;
     }
@@ -64,10 +64,7 @@ void freeStack(stack *s) {
         free(s->data);
     }
     free(s);
-    printf("stack free\n");
 }
-
-
 
 
 stackOperator *createStackOperator() {
@@ -138,5 +135,4 @@ void freeStackOperator(stackOperator *s) {
         free(s->data);
     }
     free(s);
-    printf("stack operator free\n");
 }

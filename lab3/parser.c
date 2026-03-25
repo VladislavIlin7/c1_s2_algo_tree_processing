@@ -85,14 +85,10 @@ int getNextToken(const char *expr, int *pos, char **token) {
 }
 
 
-int buildTopSubtree(stack *nodeStack, stackOperator *opStack) {
+int buildTopSubtree(operandStack *nodeStack, stackOperator *opStack) {
     char op = popOperator(opStack);
-    if (op == '\0') {
-        return -1;
-    }
-
-    node *right = pop(nodeStack);
-    node *left = pop(nodeStack);
+    node *right = popOperandStack(nodeStack);
+    node *left = popOperandStack(nodeStack);
 
     if (left == NULL || right == NULL) {
         return -1;
@@ -110,17 +106,17 @@ int buildTopSubtree(stack *nodeStack, stackOperator *opStack) {
     newNode->left = left;
     newNode->right = right;
 
-    push(nodeStack, newNode);
+    pushOperandStack(nodeStack, newNode);
     return 0;
 }
 
 node *buildExpressionTree(const char *expr) {
-    stack *nodeStack = createStack();
-    stackOperator *opStack = createStackOperator();
+    operandStack *operandStack = createOperandStack();
+    stackOperator *operatorStack = createStackOperator();
 
-    if (nodeStack == NULL || opStack == NULL) {
-        freeStack(nodeStack);
-        freeStackOperator(opStack);
+    if (operandStack == NULL || operatorStack == NULL) {
+        freeOperandStack(operandStack);
+        freeStackOperator(operatorStack);
         return NULL;
     }
 
@@ -133,44 +129,44 @@ node *buildExpressionTree(const char *expr) {
             node *operandNode = createNode(token);
             if (operandNode == NULL) {
                 free(token);
-                freeStack(nodeStack);
-                freeStackOperator(opStack);
+                freeOperandStack(operandStack);
+                freeStackOperator(operatorStack);
                 return NULL;
             }
-            push(nodeStack, operandNode);
+            pushOperandStack(operandStack, operandNode);
         } else if (token[0] == '(') {
-            pushOperator(opStack, token[0]);
+            pushOperator(operatorStack, token[0]);
         } else if (token[0] == ')') {
-            while (!isEmptyStackOperator(opStack) && peekOperator(opStack) != '(') {
-                if (buildTopSubtree(nodeStack, opStack) != 0) {
+            while (!isEmptyStackOperator(operatorStack) && peekOperator(operatorStack) != '(') {
+                if (buildTopSubtree(operandStack, operatorStack) != 0) {
                     free(token);
-                    freeStack(nodeStack);
-                    freeStackOperator(opStack);
+                    freeOperandStack(operandStack);
+                    freeStackOperator(operatorStack);
                     return NULL;
                 }
             }
 
-            if (isEmptyStackOperator(opStack)) {
+            if (isEmptyStackOperator(operatorStack)) {
                 free(token);
-                freeStack(nodeStack);
-                freeStackOperator(opStack);
+                freeOperandStack(operandStack);
+                freeStackOperator(operatorStack);
                 return NULL;
             }
 
-            popOperator(opStack);
+            popOperator(operatorStack);
         } else if (isOperator(token[0])) {
-            while (!isEmptyStackOperator(opStack) &&
-                   peekOperator(opStack) != '(' &&
-                   priority(peekOperator(opStack)) >= priority(token[0])) {
-                if (buildTopSubtree(nodeStack, opStack) != 0) {
+            while (!isEmptyStackOperator(operatorStack) && peekOperator(operatorStack) != '(' &&
+                priority(peekOperator(operatorStack)) >= priority(token[0])) {
+
+                if (buildTopSubtree(operandStack, operatorStack) != 0) {
                     free(token);
-                    freeStack(nodeStack);
-                    freeStackOperator(opStack);
+                    freeOperandStack(operandStack);
+                    freeStackOperator(operatorStack);
                     return NULL;
                 }
             }
 
-            pushOperator(opStack, token[0]);
+            pushOperator(operatorStack, token[0]);
         }
 
         free(token);
@@ -178,34 +174,34 @@ node *buildExpressionTree(const char *expr) {
     }
 
     if (status < 0) {
-        freeStack(nodeStack);
-        freeStackOperator(opStack);
+        freeOperandStack(operandStack);
+        freeStackOperator(operatorStack);
         return NULL;
     }
 
-    while (!isEmptyStackOperator(opStack)) {
-        if (peekOperator(opStack) == '(') {
-            freeStack(nodeStack);
-            freeStackOperator(opStack);
+    while (!isEmptyStackOperator(operatorStack)) {
+        if (peekOperator(operatorStack) == '(') {
+            freeOperandStack(operandStack);
+            freeStackOperator(operatorStack);
             return NULL;
         }
 
-        if (buildTopSubtree(nodeStack, opStack) != 0) {
-            freeStack(nodeStack);
-            freeStackOperator(opStack);
+        if (buildTopSubtree(operandStack, operatorStack) != 0) {
+            freeOperandStack(operandStack);
+            freeStackOperator(operatorStack);
             return NULL;
         }
     }
 
-    node *root = pop(nodeStack);
+    node *root = popOperandStack(operandStack);
 
-    if (!isEmptyStack(nodeStack)) {
-        freeStack(nodeStack);
-        freeStackOperator(opStack);
+    if (!isEmptyOperandStack(operandStack)) {
+        freeOperandStack(operandStack);
+        freeStackOperator(operatorStack);
         return NULL;
     }
 
-    freeStack(nodeStack);
-    freeStackOperator(opStack);
+    freeOperandStack(operandStack);
+    freeStackOperator(operatorStack);
     return root;
 }
