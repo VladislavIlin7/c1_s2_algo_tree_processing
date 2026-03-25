@@ -1,7 +1,42 @@
 #include "parser.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+char *readLine() {
+    int ch;
+    int size = 16;
+    int len = 0;
+
+    char *buffer = malloc(size);
+    if (buffer == NULL) {
+        return NULL;
+    }
+
+    while ((ch = getchar()) != '\n' && ch != EOF) {
+        buffer[len++] = ch;
+
+        if (len >= size) {
+            size *= 2;
+            char *tmp = realloc(buffer, size);
+            if (tmp == NULL) {
+                free(buffer);
+                return NULL;
+            }
+            buffer = tmp;
+        }
+    }
+
+    if (ch == EOF && len == 0) {
+        free(buffer);
+        return NULL;
+    }
+
+    buffer[len] = '\0';
+    return buffer;
+}
+
 
 int main() {
     char expr[256];
@@ -9,11 +44,10 @@ int main() {
     while (1) {
         printf("expr> ");
 
-        if (fgets(expr, sizeof(expr), stdin) == NULL) {
+        char *expr = readLine();
+        if (expr == NULL) {
             break;
         }
-
-        expr[strcspn(expr, "\n")] = '\0';
 
         if (expr[0] == '\0') {
             continue;
