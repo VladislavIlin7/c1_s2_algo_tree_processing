@@ -39,12 +39,11 @@ char *readLine() {
 
 
 int main() {
-    char expr[256];
-
     while (1) {
-        printf("expr> ");
+        printf("\nexpr> ");
 
         char *expr = readLine();
+    
         if (expr == NULL) {
             break;
         }
@@ -63,17 +62,21 @@ int main() {
             continue;
         }
 
-        printf("Input: ");
+        printf("\nInput: ");
         printExpression(root);
         printf("\n\nOrigin tree:\n");
         printTree(root, 0);
+        printf("\nPolish: ");
+        printPolish(root);
 
         root = transform(root);
 
-        printf("\nResult: ");
+        printf("\n\nResult: ");
         printExpression(root);
         printf("\n\nResult tree:\n");
         printTree(root, 0);
+        printf("\nPolish: ");
+        printPolish(root);
 
         freeTree(root);
     }

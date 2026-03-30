@@ -13,6 +13,7 @@ node *copyTree(node *root);
 
 void printTree(node *root, int level);
 void printExpression(node *root);
+void printPolish(node *root);
 
 int isMultiplyNode(node *root);
 int isPlusNode(node *root);

@@ -52,6 +52,17 @@ void printTree(node *root, int level) {
     printTree(root->right, level + 1);
 }
 
+void printPolish(node *root) {
+    if (root == NULL) {
+        return;
+    }
+
+
+    printPolish(root->left);
+    printPolish(root->right);
+    printf("%s ", root->data);
+}
+
 void printExpression(node *root) {
     if (root == NULL) {
         return;
@@ -133,8 +144,7 @@ node *transform(node *root) {
         node *mul2 = createNode("*");
         node *plus = createNode("+");
 
-        if (a1 == NULL || a2 == NULL || b == NULL || c == NULL ||
-            mul1 == NULL || mul2 == NULL || plus == NULL) {
+        if (a1 == NULL || a2 == NULL || b == NULL || c == NULL || mul1 == NULL || mul2 == NULL || plus == NULL) {
             return root;
         }
 
