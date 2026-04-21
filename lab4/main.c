@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
 #include "avlTree.h"
 
 char *readLine() {
@@ -8,7 +8,9 @@ char *readLine() {
     int size = 16;
     int len = 0;
     char *buffer = malloc(size);
-    if (buffer == NULL) return NULL;
+    if (buffer == NULL) {
+        return NULL;
+    }
     while ((ch = getchar()) != '\n' && ch != EOF) {
         buffer[len++] = ch;
         if (len >= size) {
@@ -35,6 +37,7 @@ void showMenu() {
     printf("2. Delete node\n");
     printf("3. Print tree\n");
     printf("4. Search by key\n");
+    printf("5. Process file\n");
     printf("0. Exit\n");
     printf("================\n");
     printf("Choose option: ");
@@ -47,7 +50,9 @@ int main() {
         showMenu();
 
         char *line = readLine();
-        if (line == NULL) continue;
+        if (line == NULL) {
+            continue;
+        }
 
         int choice;
         if (sscanf(line, "%d", &choice) != 1) {
@@ -59,7 +64,7 @@ int main() {
 
         if (choice == 1) {
             char *key;
-            char *line;
+            char *valueLine;
             double value;
 
             printf("Enter key: ");
@@ -76,18 +81,17 @@ int main() {
             }
 
             printf("Enter value: ");
-            line = readLine();
-            if (line == NULL || sscanf(line, "%lf", &value) != 1) {
+            valueLine = readLine();
+            if (valueLine == NULL || sscanf(valueLine, "%lf", &value) != 1) {
                 printf("Invalid value!\n");
                 free(key);
-                free(line);
+                free(valueLine);
                 continue;
             }
-            free(line);
+            free(valueLine);
 
             root = insert(root, key, value);
             printf("Node added\n");
-
             free(key);
         } else if (choice == 2) {
             char *key;
@@ -105,8 +109,12 @@ int main() {
                 continue;
             }
 
-            root = deleteNode(root, key);
-            printf("Delete completed\n");
+            if (search(root, key) == NULL) {
+                printf("Key not found\n");
+            } else {
+                root = deleteNode(root, key);
+                printf("Delete completed\n");
+            }
 
             free(key);
         } else if (choice == 3) {
@@ -132,7 +140,6 @@ int main() {
             }
 
             Node *res = search(root, key);
-
             if (res == NULL) {
                 printf("Key not found\n");
             } else {
@@ -140,6 +147,8 @@ int main() {
             }
 
             free(key);
+        } else if (choice == 5) {
+            processFile(&root, "input.txt", "output.txt");
         } else if (choice == 0) {
             freeTree(root);
             printf("Memory freed\n");

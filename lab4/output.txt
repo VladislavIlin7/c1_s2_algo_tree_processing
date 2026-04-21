@@ -1,0 +1,141 @@
+1 mango 10.5
+OK
+
+1 apple 3.2
+OK
+
+1 zebra 15.8
+OK
+
+1 lemon 7.4
+OK
+
+1 grape 6.1
+OK
+
+1 peach 9.9
+OK
+
+1 cherry 4.7
+OK
+
+1 banana 2.5
+OK
+
+1 orange 11.3
+OK
+
+1 melon 8.8
+OK
+
+1 kiwi 5.6
+OK
+
+1 plum 12.4
+OK
+
+1 apric 1.9
+OK
+
+1 berry 2.8
+OK
+
+1 cocos 13.7
+OK
+
+1 guava 6.9
+OK
+
+1 papaya 14.2
+OK
+
+1 tomato 16.1
+OK
+
+1 radish 10.0
+OK
+
+1 onion 9.1
+OK
+
+1 carrot 4.4
+OK
+
+1 garlic 5.0
+OK
+
+3
+|-- mango : 10.50 (h=5)
+    |-- cherry : 4.70 (h=4)
+        |-- banana : 2.50 (h=3)
+            |-- apple : 3.20 (h=2)
+                |-- apric : 1.90 (h=1)
+            |-- carrot : 4.40 (h=2)
+                |-- berry : 2.80 (h=1)
+        |-- grape : 6.10 (h=3)
+            |-- cocos : 13.70 (h=2)
+                |-- garlic : 5.00 (h=1)
+            |-- kiwi : 5.60 (h=2)
+                |-- guava : 6.90 (h=1)
+                |-- lemon : 7.40 (h=1)
+    |-- peach : 9.90 (h=4)
+        |-- orange : 11.30 (h=3)
+            |-- melon : 8.80 (h=2)
+                |-- onion : 9.10 (h=1)
+            |-- papaya : 14.20 (h=1)
+        |-- radish : 10.00 (h=3)
+            |-- plum : 12.40 (h=1)
+            |-- zebra : 15.80 (h=2)
+                |-- tomato : 16.10 (h=1)
+
+4 apple
+3.20
+
+4 zebra
+15.80
+
+4 melon
+8.80
+
+2 lemon
+OK
+
+2 berry
+OK
+
+2 tomato
+OK
+
+3
+|-- mango : 10.50 (h=5)
+    |-- cherry : 4.70 (h=4)
+        |-- banana : 2.50 (h=3)
+            |-- apple : 3.20 (h=2)
+                |-- apric : 1.90 (h=1)
+            |-- carrot : 4.40 (h=1)
+        |-- grape : 6.10 (h=3)
+            |-- cocos : 13.70 (h=2)
+                |-- garlic : 5.00 (h=1)
+            |-- kiwi : 5.60 (h=2)
+                |-- guava : 6.90 (h=1)
+    |-- peach : 9.90 (h=4)
+        |-- orange : 11.30 (h=3)
+            |-- melon : 8.80 (h=2)
+                |-- onion : 9.10 (h=1)
+            |-- papaya : 14.20 (h=1)
+        |-- radish : 10.00 (h=2)
+            |-- plum : 12.40 (h=1)
+            |-- zebra : 15.80 (h=1)
+
+4 lemon
+Key not found
+
+4 berry
+Key not found
+
+4 tomato
+Key not found
+
+4 mango
+10.50
+

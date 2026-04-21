@@ -1,6 +1,8 @@
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
 
+#include <stdio.h>
+
 typedef struct Node {
     char *key;
     double data;
@@ -29,5 +31,9 @@ Node *search(Node *root, const char *key);
 
 void printTree(Node *root, int level);
 void freeTree(Node *root);
+
+char *readLineFile(FILE *file);
+void printTreeToFile(Node *root, int level, FILE *out);
+void processFile(Node **root, const char *inputFilename, const char *outputFilename);
 
 #endif
