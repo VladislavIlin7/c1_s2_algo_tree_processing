@@ -173,10 +173,6 @@ Node *deleteNode(Node *root, const char *key) {
         root->right = deleteNode(root->right, temp->key);
     }
 
-    if (root == NULL) {
-        return NULL;
-    }
-
     updateHeight(root);
 
     int balance = getBalance(root);

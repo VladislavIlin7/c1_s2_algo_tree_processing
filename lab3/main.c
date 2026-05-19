@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *readLine() {
+char *readLineFile() {
     int ch;
     int size = 16;
     int len = 0;
@@ -42,7 +42,7 @@ int main() {
     while (1) {
         printf("\nexpr> ");
 
-        char *expr = readLine();
+        char *expr = readLineFile();
     
         if (expr == NULL) {
             break;
