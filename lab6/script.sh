@@ -1,39 +1,12 @@
 #!/usr/bin/env bash
 
-if [ "$#" -ne 3 ]; then
-    echo "Было введено $# аргументов. Нужно 3 аргумента: <каталог> <длина> <знак>"
-    exit 1
-fi
-
 directory="$1"
 target_length="$2"
 fill_char="$3"
 
-if [ ! -d "$directory" ]; then
-    echo "$directory - не существует или не является директорией"
-    exit 1
-fi
-
-if ! [[ "$target_length" =~ ^[1-9][0-9]*$ ]]; then
-    echo "$target_length - длина должна быть положительным целым числом"
-    exit 1
-fi
-
-if [ "${#fill_char}" -ne 1 ]; then
-    echo "$fill_char - знак должен состоять из одного символа"
-    exit 1
-fi
-
-directory="$(cd "$directory" && pwd)"
-
 pad_file_name() {
     local file_path="$1"
-    local parent
-    local file_name
-    local name
-    local extension
-    local new_name
-    local new_path
+    local parent file_name name extension new_name new_path
 
     parent="$(dirname "$file_path")"
     file_name="$(basename "$file_path")"
@@ -55,8 +28,7 @@ pad_file_name() {
         new_name="${new_name}${fill_char}"
     done
 
-    new_name="${new_name}${extension}"
-    new_path="${parent}/${new_name}"
+    new_path="${parent}/${new_name}${extension}"
 
     if [ -e "$new_path" ]; then
         echo "Пропущено: $file_path -> $new_path уже существует"
@@ -67,19 +39,6 @@ pad_file_name() {
     echo "$file_path -> $new_path"
 }
 
-walk() {
-    local current_dir="$1"
-    local item
-
-    for item in "$current_dir"/* "$current_dir"/.[!.]* "$current_dir"/..?*; do
-        [ -e "$item" ] || continue
-
-        if [ -d "$item" ]; then
-            walk "$item"
-        elif [ -f "$item" ]; then
-            pad_file_name "$item"
-        fi
-    done
-}
-
-walk "$directory"
+find "$directory" -type f -print0 | while IFS= read -r -d '' file; do
+    pad_file_name "$file"
+done
